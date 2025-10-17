@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #1f1f1f, #2d2d2d);
+    height: 100vh; display: flex; justify-content: center; align-items: center;
+    color: #fff; margin: 0;
+  }
+  .calculator {
+    width: 320px;
+    background: #121212;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .display {
+    background: #1db954;
+    color: #08160a;
+    text-align: right;
+    padding: 18px;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    min-height: 60px;
+    overflow-x: auto;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  button {
+    border: none;
+    outline: none;
+    background: #2f2f2f;
+    color: white;
+    font-size: 1.2rem;
+    padding: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover { background: #3a3a3a; }
+  button.operator { background: #1db954; color: #08160a; font-weight: bold; }
+  button.clear { background: #ff3b3b; }
+  button.equal { background: #1db954; color: #08160a; grid-column: span 2; }
+  @media (max-width: 400px) {
+    .calculator { width: 92%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="calculator">
+  <div id="display" class="display">0</div>
+  <div class="buttons">
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button onclick="deleteLast()">⌫</button>
+    <button onclick="append('%')" class="operator">%</button>
+    <button onclick="append('/')" class="operator">÷</button>
+
+    <button onclick="append('7')">7</button>
+    <button onclick="append('8')">8</button>
+    <button onclick="append('9')">9</button>
+    <button onclick="append('*')" class="operator">×</button>
+
+    <button onclick="append('4')">4</button>
+    <button onclick="append('5')">5</button>
+    <button onclick="append('6')">6</button>
+    <button onclick="append('-')" class="operator">−</button>
+
+    <button onclick="append('1')">1</button>
+    <button onclick="append('2')">2</button>
+    <button onclick="append('3')">3</button>
+    <button onclick="append('+')" class="operator">+</button>
+
+    <button onclick="append('0')">0</button>
+    <button onclick="append('.')">.</button>
+    <button onclick="calculate()" class="equal">=</button>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById('display');
+
+  function append(value) {
+    if (display.textContent === '0' || display.textContent === 'Error')
+      display.textContent = value;
+    else
+      display.textContent += value;
+  }
+
+  function clearDisplay() {
+    display.textContent = '0';
+  }
+
+  function deleteLast() {
+    if (display.textContent.length === 1 || display.textContent === 'Error')
+      display.textContent = '0';
+    else
+      display.textContent = display.textContent.slice(0, -1);
+  }
+
+  function calculate() {
+    try {
+      const result = eval(display.textContent.replace('÷', '/').replace('×', '*'));
+      display.textContent = result;
+    } catch {
+      display.textContent = 'Error';
+    }
+  }
+
+  // Bonus: Keyboard support
+  window.addEventListener('keydown', (e) => {
+    const key = e.key;
+    if (!isNaN(key) || "+-*/.%".includes(key)) append(key);
+    if (key === 'Enter') calculate();
+    if (key === 'Backspace') deleteLast();
+    if (key.toLowerCase() === 'c') clearDisplay();
+  });
+</script>
+
+</body>
+</html>
